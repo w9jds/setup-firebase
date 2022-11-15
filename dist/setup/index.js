@@ -3971,13 +3971,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.login = void 0;
-const core_1 = __nccwpck_require__(186);
 const fs_1 = __nccwpck_require__(147);
+const core_1 = __nccwpck_require__(186);
 const login = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, core_1.startGroup)("Firebase Authentication");
     let key = (0, core_1.getInput)("gcp_sa_key");
     const token = (0, core_1.getInput)("firebase_token");
-    (0, core_1.info)(key);
     if (!key && !token) {
         throw new Error("Either firebase_token or gcp_sa_key are required to authenticate firebase-tools");
     }
@@ -3985,7 +3984,7 @@ const login = () => __awaiter(void 0, void 0, void 0, function* () {
         (0, core_1.info)("Setting firebase token for use by CLI");
         yield (0, core_1.exportVariable)("FIREBASE_TOKEN", token);
     }
-    else if (key) {
+    if (key) {
         const pattern = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
         if (pattern.test(key)) {
             const buffer = Buffer.from(key, "base64");
@@ -4058,7 +4057,7 @@ const auth_1 = __nccwpck_require__(497);
 const installer_1 = __nccwpck_require__(574);
 const project_1 = __nccwpck_require__(191);
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    // setSecret('gcp_sa_key');
+    (0, core_1.setSecret)("gcp_sa_key");
     (0, core_1.setSecret)("firebase_token");
     try {
         yield (0, installer_1.install)();

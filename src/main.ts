@@ -14,7 +14,7 @@ import { install } from "./installer";
 import { setupProject } from "./project";
 
 export const run = async () => {
-  // setSecret('gcp_sa_key');
+  setSecret("gcp_sa_key");
   setSecret("firebase_token");
 
   try {

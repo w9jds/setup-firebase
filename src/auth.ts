@@ -1,3 +1,4 @@
+import { writeFileSync } from "fs";
 import {
   getInput,
   info,
@@ -5,14 +6,11 @@ import {
   startGroup,
   endGroup,
 } from "@actions/core";
-import { writeFileSync } from "fs";
 
 export const login = async () => {
   startGroup("Firebase Authentication");
   let key = getInput("gcp_sa_key");
   const token = getInput("firebase_token");
-
-  info(key);
 
   if (!key && !token) {
     throw new Error(
@@ -23,7 +21,9 @@ export const login = async () => {
   if (token) {
     info("Setting firebase token for use by CLI");
     await exportVariable("FIREBASE_TOKEN", token);
-  } else if (key) {
+  }
+
+  if (key) {
     const pattern =
       /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
     if (pattern.test(key)) {
