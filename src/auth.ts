@@ -1,4 +1,4 @@
-import { getInput, debug, error, setSecret, startGroup, endGroup } from '@actions/core';
+import { getInput, debug, exportVariable, setSecret, startGroup, endGroup } from '@actions/core';
 import { exec } from '@actions/exec';
 
 export const login = async () => {
@@ -16,14 +16,14 @@ export const login = async () => {
   }
 
   if (token) {
-    await exec(`export FIREBASE_TOKEN=${token}`);
+    await exportVariable('FIREBASE_TOKEN', token);
   }
 
   if (key) {
     debug('Storing service account key into /opt/gcp_key.json');
     // TODO copy file here (check if it's encoded)
 
-    await exec('export GOOGLE_APPLICATION_CREDENTIALS=/opt/gcp_key.json');
+    await exportVariable('GOOGLE_APPLICATION_CREDENTIALS', '/opt/gcp_key.json');
   }
   endGroup();
 }
