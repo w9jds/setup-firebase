@@ -1,4 +1,4 @@
-import { warning, startGroup, setOutput, endGroup, info, setFailed } from '@actions/core';
+import { warning, startGroup, setSecret, setOutput, endGroup, info, setFailed } from '@actions/core';
 import { getExecOutput } from '@actions/exec';
 
 import { login } from './auth';
@@ -6,6 +6,9 @@ import { install } from './installer';
 import { setupProject } from './project';
 
 export const run = async () => {
+  // setSecret('gcp_sa_key');
+  setSecret('firebase_token');
+
   try {
     
     await install();

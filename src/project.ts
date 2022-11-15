@@ -1,7 +1,8 @@
-import { getInput, debug } from "@actions/core"
+import { getInput, endGroup, startGroup } from "@actions/core"
 import { exec } from "@actions/exec";
 
 export const setupProject = async () => {
+  startGroup('Setup Project');
   const projectId = getInput('project_id');
   const path = getInput('project_path');
 
@@ -12,4 +13,5 @@ export const setupProject = async () => {
   if (projectId) {
     await exec(`firebase use --add ${projectId}`);
   }
+  endGroup();
 }

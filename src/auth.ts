@@ -1,13 +1,12 @@
-import { getInput, debug, exportVariable, setSecret, startGroup, endGroup } from '@actions/core';
-import { exec } from '@actions/exec';
+import { getInput, info, exportVariable, startGroup, endGroup } from '@actions/core';
+import { writeFileSync } from 'fs';
 
 export const login = async () => {
   startGroup('Firebase Authentication');
-  setSecret('gcp_sa_key');
-  setSecret('firebase_token');
-
-  const key = getInput('gcp_sa_key');
+  let key = getInput('gcp_sa_key');
   const token = getInput('firebase_token');
+
+  info(key);
 
   if (!key && !token) {
     throw new Error(
@@ -16,14 +15,19 @@ export const login = async () => {
   }
 
   if (token) {
+    info('Setting firebase token for use by CLI');
     await exportVariable('FIREBASE_TOKEN', token);
-  }
+  } else if (key) {
+    const pattern = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+    if (pattern.test(key)) {
+      const buffer = Buffer.from(key, 'base64');
+      key = buffer.toString('ascii');
+    }
 
-  if (key) {
-    debug('Storing service account key into /opt/gcp_key.json');
-    // TODO copy file here (check if it's encoded)
-
+    info('Storing service account key into /opt/gcp_key.json');
+    writeFileSync('/opt/gcp_key.json', key);
     await exportVariable('GOOGLE_APPLICATION_CREDENTIALS', '/opt/gcp_key.json');
   }
+
   endGroup();
 }

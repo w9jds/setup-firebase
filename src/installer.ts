@@ -1,7 +1,8 @@
-import { getInput, warning, startGroup, setOutput, endGroup, info, setFailed } from '@actions/core';
+import { getInput, startGroup, endGroup } from '@actions/core';
 import { exec } from '@actions/exec';
 
 export const install = async () => {
+  startGroup('Firebase-Tools Installer');
   const version = getInput('tools-version');
   let command = 'npm install -g firebase-tools';
 
@@ -11,4 +12,5 @@ export const install = async () => {
   }
 
   await exec(command);
+  endGroup();
 }
