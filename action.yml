@@ -1,0 +1,23 @@
+name: Setup Firebase
+description: Setup the firebase-tools in this workflow step
+author: Jeremy Shore
+inputs:
+  firebase_token:
+    description: The token to use for authentication
+    required: false
+  gcp_sa_key:
+    description: Service account key for authentication
+    required: false
+  project_id:
+    description: Specify a specific project to use for all commands
+    required: false
+  project_path:
+    description: Path to the folder containing firebase.json if it doesn't exist at the root of your repository
+    required: false
+branding:
+  icon: 'activity'
+  color: 'gray-dark'
+runs:
+  using: node16
+  main: dist/setup/index.js
+  post-if: success()

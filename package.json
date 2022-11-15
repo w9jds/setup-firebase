@@ -1,0 +1,35 @@
+{
+  "name": "setup-firebase",
+  "version": "0.1.0",
+  "description": "Setup Firebase Action",
+  "main": "lib/setup-firebase.js",
+  "scripts": {
+    "build": "ncc build -o dist/setup src/setup-firebase.ts",
+    "format": "prettier --write **/*.ts",
+    "format-check": "prettier --check **/*.ts",
+    "test": "jest",
+    "pre-checkin": "npm run format && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w9jds/setup-firebase.git"
+  },
+  "keywords": [
+    "actions",
+    "firebase",
+    "setup"
+  ],
+  "author": "Jeremy Shore",
+  "license": "MIT",
+  "devDependencies": {
+    "@vercel/ncc": "^0.34.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@actions/cache": "^3.0.6",
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1",
+    "@actions/io": "^1.1.2"
+  }
+}
