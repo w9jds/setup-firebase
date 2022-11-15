@@ -22,6 +22,7 @@
   "author": "Jeremy Shore",
   "license": "MIT",
   "devDependencies": {
+    "@types/command-exists": "^1.2.0",
     "@vercel/ncc": "^0.34.0",
     "prettier": "^2.7.1",
     "typescript": "^4.8.4"
@@ -30,6 +31,7 @@
     "@actions/cache": "^3.0.6",
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
-    "@actions/io": "^1.1.2"
+    "@actions/io": "^1.1.2",
+    "command-exists": "^1.2.9"
   }
 }

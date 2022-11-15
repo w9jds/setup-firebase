@@ -21,8 +21,8 @@ export const run = async () => {
     await install();
     await login();
     await setupProject();
-  } catch (e) {
-    setFailed(`Failed to setup firebase with error ${e}`);
+  } catch (ex) {
+    setFailed(JSON.stringify(ex));
   }
 };
 
