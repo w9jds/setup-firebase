@@ -2,6 +2,9 @@ name: Setup Firebase
 description: Setup the firebase-tools in this workflow step
 author: Jeremy Shore
 inputs:
+  tools-version:
+    description: Version of firebase-tools to install
+    required: false
   firebase_token:
     description: The token to use for authentication
     required: false
