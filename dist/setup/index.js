@@ -3972,23 +3972,28 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.login = void 0;
 const core_1 = __nccwpck_require__(186);
-const exec_1 = __nccwpck_require__(514);
+const fs_1 = __nccwpck_require__(147);
 const login = () => __awaiter(void 0, void 0, void 0, function* () {
-    (0, core_1.startGroup)('Firebase Authentication');
-    (0, core_1.setSecret)('gcp_sa_key');
-    (0, core_1.setSecret)('firebase_token');
-    const key = (0, core_1.getInput)('gcp_sa_key');
-    const token = (0, core_1.getInput)('firebase_token');
+    (0, core_1.startGroup)("Firebase Authentication");
+    let key = (0, core_1.getInput)("gcp_sa_key");
+    const token = (0, core_1.getInput)("firebase_token");
+    (0, core_1.info)(key);
     if (!key && !token) {
-        throw new Error('Either firebase_token or gcp_sa_key are required to authenticate firebase-tools');
+        throw new Error("Either firebase_token or gcp_sa_key are required to authenticate firebase-tools");
     }
     if (token) {
-        yield (0, exec_1.exec)(`export FIREBASE_TOKEN=${token}`);
+        (0, core_1.info)("Setting firebase token for use by CLI");
+        yield (0, core_1.exportVariable)("FIREBASE_TOKEN", token);
     }
-    if (key) {
-        (0, core_1.debug)('Storing service account key into /opt/gcp_key.json');
-        // TODO copy file here (check if it's encoded)
-        yield (0, exec_1.exec)('export GOOGLE_APPLICATION_CREDENTIALS=/opt/gcp_key.json');
+    else if (key) {
+        const pattern = /^([0-9a-zA-Z+/]{4})*(([0-9a-zA-Z+/]{2}==)|([0-9a-zA-Z+/]{3}=))?$/;
+        if (pattern.test(key)) {
+            const buffer = Buffer.from(key, "base64");
+            key = buffer.toString("ascii");
+        }
+        (0, core_1.info)("Storing service account key into /opt/gcp_key.json");
+        (0, fs_1.writeFileSync)("/opt/gcp_key.json", key);
+        yield (0, core_1.exportVariable)("GOOGLE_APPLICATION_CREDENTIALS", "/opt/gcp_key.json");
     }
     (0, core_1.endGroup)();
 });
@@ -4016,12 +4021,15 @@ exports.install = void 0;
 const core_1 = __nccwpck_require__(186);
 const exec_1 = __nccwpck_require__(514);
 const install = () => __awaiter(void 0, void 0, void 0, function* () {
-    const version = (0, core_1.getInput)('tools-version');
-    let command = 'npm install -g firebase-tools';
+    (0, core_1.startGroup)("Firebase-Tools Installer");
+    const version = (0, core_1.getInput)("tools-version");
+    let command = "npm install -g firebase-tools";
     if (version) {
+        (0, core_1.debug)(`Using version ${version}`);
         command = `${command}@${version}`;
     }
-    yield (0, exec_1.exec)(command);
+    yield (0, exec_1.exec)("curl -sL firebase.tools | bash");
+    (0, core_1.endGroup)();
 });
 exports.install = install;
 
@@ -4050,6 +4058,8 @@ const auth_1 = __nccwpck_require__(497);
 const installer_1 = __nccwpck_require__(574);
 const project_1 = __nccwpck_require__(191);
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
+    // setSecret('gcp_sa_key');
+    (0, core_1.setSecret)("firebase_token");
     try {
         yield (0, installer_1.install)();
         yield (0, auth_1.login)();
@@ -4061,10 +4071,10 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.run = run;
 const printEnvDetailsAndSetOutput = () => __awaiter(void 0, void 0, void 0, function* () {
-    (0, core_1.startGroup)('Environment details');
-    const promises = ['node', 'java', 'firebase'].map((tool) => __awaiter(void 0, void 0, void 0, function* () {
-        const output = yield getToolVersion(tool, ['--version']);
-        if (tool === 'node') {
+    (0, core_1.startGroup)("Environment details");
+    const promises = ["node", "java", "firebase"].map((tool) => __awaiter(void 0, void 0, void 0, function* () {
+        const output = yield getToolVersion(tool, ["--version"]);
+        if (tool === "node") {
             (0, core_1.setOutput)(`${tool}-version`, output);
         }
         (0, core_1.info)(`${tool}: ${output}`);
@@ -4077,16 +4087,16 @@ const getToolVersion = (tool, options) => __awaiter(void 0, void 0, void 0, func
     try {
         const { stdout, stderr, exitCode } = yield (0, exec_1.getExecOutput)(tool, options, {
             ignoreReturnCode: true,
-            silent: true
+            silent: true,
         });
         if (exitCode > 0) {
             (0, core_1.warning)(`[warning]${stderr}`);
-            return '';
+            return "";
         }
         return stdout;
     }
     catch (err) {
-        return '';
+        return "";
     }
 });
 
@@ -4112,14 +4122,16 @@ exports.setupProject = void 0;
 const core_1 = __nccwpck_require__(186);
 const exec_1 = __nccwpck_require__(514);
 const setupProject = () => __awaiter(void 0, void 0, void 0, function* () {
-    const projectId = (0, core_1.getInput)('project_id');
-    const path = (0, core_1.getInput)('project_path');
+    (0, core_1.startGroup)("Setup Project");
+    const projectId = (0, core_1.getInput)("project_id");
+    const path = (0, core_1.getInput)("project_path");
     if (path) {
         yield (0, exec_1.exec)(`cd ${path}`);
     }
     if (projectId) {
         yield (0, exec_1.exec)(`firebase use --add ${projectId}`);
     }
+    (0, core_1.endGroup)();
 });
 exports.setupProject = setupProject;
 
