@@ -12,6 +12,6 @@ export const install = async () => {
     command = `${command}@${version}`;
   }
 
-  await exec("curl -sL firebase.tools | bash");
+  await exec(command);
   endGroup();
 };

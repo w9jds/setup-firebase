@@ -4028,7 +4028,7 @@ const install = () => __awaiter(void 0, void 0, void 0, function* () {
         (0, core_1.debug)(`Using version ${version}`);
         command = `${command}@${version}`;
     }
-    yield (0, exec_1.exec)("curl -sL firebase.tools | bash");
+    yield (0, exec_1.exec)(command);
     (0, core_1.endGroup)();
 });
 exports.install = install;
