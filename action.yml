@@ -21,6 +21,6 @@ branding:
   icon: 'activity'
   color: 'gray-dark'
 runs:
-  using: node16
+  using: node20
   main: dist/setup/index.js
   post-if: success()
