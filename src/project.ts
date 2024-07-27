@@ -7,7 +7,7 @@ export const setupProject = async () => {
   const path = getInput("project_path");
 
   if (path) {
-    await exec(`cd ${path}`);
+    process.chdir(path);
   }
 
   if (projectId) {
